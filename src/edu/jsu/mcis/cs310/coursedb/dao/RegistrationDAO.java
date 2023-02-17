@@ -24,7 +24,7 @@ public class RegistrationDAO {
     public boolean create(int studentid, int termid, int crn) {
         
         boolean result = false;
-        
+
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -78,7 +78,7 @@ public class RegistrationDAO {
             
             if (conn.isValid(0)) {
                 
-                String query = "DELETE FROM registration WHERE student_id = ? AND term_id = ? AND crn = ?";
+                String query = "DELETE FROM registration WHERE studentid = ? AND termid = ? AND crn = ?";
                 ps = conn.prepareStatement(query);
                 ps.setInt(1, studentid);
                 ps.setInt(2, termid);
@@ -143,51 +143,48 @@ public class RegistrationDAO {
     public String list(int studentid, int termid) {
         
         String result = null;
-        
+            
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            
-            Connection conn = daoFactory.getConnection();
-            
-            if (conn.isValid(0)) {
                 
-        // Build the SQL query to retrieve the list of courses for the specified student and term
-            String sql = "SELECT s.crn, s.coursename, s.instructor, t.termname " +
-                        "FROM registration r " +
-                        "JOIN section s ON r.crn = s.crn " +
-                        "JOIN term t ON r.termid = t.termid " +
-                        "WHERE r.studentid = ? AND r.termid = ?";
-
-                        // Prepare the statement and set the parameters
-                ps = conn.prepareStatement(sql);
+            Connection conn = daoFactory.getConnection();
+                
+            if (conn.isValid(0)) {
+                    
+                // Build the SQL query to retrieve the list of courses for the specified student and term
+                ps = conn.prepareStatement("SELECT s.crn, s.coursename, s.instructor, t.termname " +
+                                           "FROM registration r " +
+                                           "JOIN section s ON r.crn = s.crn " +
+                                           "JOIN term t ON r.termid = t.termid " +
+                                           "WHERE r.studentid = ? AND r.termid = ?");
                 ps.setInt(1, studentid);
                 ps.setInt(2, termid);
-
-            // Execute the query and process the results
-            rs = ps.executeQuery();
-            StringBuilder sb = new StringBuilder();
-            while (rs.next()) {
-            sb.append(rs.getString("crn")).append("\t")
-           .append(rs.getString("coursename")).append("\t")
-            .append(rs.getString("instructor")).append("\t")
-            .append(rs.getString("termname")).append("\n");
-            }
-            result = sb.toString();
+    
+                // Execute the query and process the results
+                rs = ps.executeQuery();
+                StringBuilder sb = new StringBuilder();
+                while (rs.next()) {
+                    sb.append(rs.getString("crn")).append("\t")
+                      .append(rs.getString("coursename")).append("\t")
+                      .append(rs.getString("instructor")).append("\t")
+                      .append(rs.getString("termname")).append("\n");
+                }
+                result = sb.toString();
             }
         }
-        
-        catch (Exception e) { e.printStackTrace(); }
-        
-        finally {
             
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+            
+        finally {
             if (rs != null) { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
             if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
-            
         }
-        
+            
         return result;
-        
     }
+    
     
 }
