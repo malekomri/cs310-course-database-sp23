@@ -1,4 +1,10 @@
-package edu.jsu.mcis.cs310.coursedb.dao;
+/*
+ * Author: Malek 
+ * CS 310
+ * Project 2 
+ */
+
+ package edu.jsu.mcis.cs310.coursedb.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
