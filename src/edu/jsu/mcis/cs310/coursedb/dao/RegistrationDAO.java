@@ -152,10 +152,29 @@ public class RegistrationDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
-                
+        // Build the SQL query to retrieve the list of courses for the specified student and term
+            String sql = "SELECT s.crn, s.coursename, s.instructor, t.termname " +
+                        "FROM registration r " +
+                        "JOIN section s ON r.crn = s.crn " +
+                        "JOIN term t ON r.termid = t.termid " +
+                        "WHERE r.studentid = ? AND r.termid = ?";
+
+                        // Prepare the statement and set the parameters
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
+
+            // Execute the query and process the results
+            rs = ps.executeQuery();
+            StringBuilder sb = new StringBuilder();
+            while (rs.next()) {
+            sb.append(rs.getString("crn")).append("\t")
+           .append(rs.getString("coursename")).append("\t")
+            .append(rs.getString("instructor")).append("\t")
+            .append(rs.getString("termname")).append("\n");
             }
-            
+            result = sb.toString();
+            }
         }
         
         catch (Exception e) { e.printStackTrace(); }
