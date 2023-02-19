@@ -11,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class RegistrationDAO {
     
     // INSERT YOUR CODE HERE
@@ -141,48 +144,50 @@ public class RegistrationDAO {
     }
 
     public String list(int studentid, int termid) {
-        
         String result = null;
-            
         PreparedStatement ps = null;
         ResultSet rs = null;
+    
         try {
-                
             Connection conn = daoFactory.getConnection();
-                
             if (conn.isValid(0)) {
-                    
-                // Build the SQL query to retrieve the list of courses for the specified student and term
-                ps = conn.prepareStatement("SELECT s.crn, s.coursename, s.instructor, t.termname " +
-                                           "FROM registration r " +
-                                           "JOIN section s ON r.crn = s.crn " +
-                                           "JOIN term t ON r.termid = t.termid " +
-                                           "WHERE r.studentid = ? AND r.termid = ?");
+                // Build the SQL query to retrieve the list of registered courses for the specified student and term
+                String sql = "SELECT r.studentid, r.termid, r.crn " +
+                             "FROM registration r " +
+                             "WHERE r.studentid = ? AND r.termid = ? " +
+                             "ORDER BY r.crn";
+                ps = conn.prepareStatement(sql);
                 ps.setInt(1, studentid);
                 ps.setInt(2, termid);
     
                 // Execute the query and process the results
                 rs = ps.executeQuery();
-                StringBuilder sb = new StringBuilder();
+    
+                // Process the query results and create the JSON array
+                JsonArray jsonArray = new JsonArray();
                 while (rs.next()) {
-                    sb.append(rs.getString("crn")).append("\t")
-                      .append(rs.getString("coursename")).append("\t")
-                      .append(rs.getString("instructor")).append("\t")
-                      .append(rs.getString("termname")).append("\n");
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.put("studentid", rs.getInt("studentid"));
+                    jsonObject.put("termid", rs.getInt("termid"));
+                    jsonObject.put("crn", rs.getInt("crn"));
+                    jsonArray.add(jsonObject);
                 }
-                result = sb.toString();
+    
+                if (jsonArray.size() > 0) {
+                    // If there is at least one registration, set the result to the JSON array
+                    result = jsonArray.toString();
+                } else {
+                    // If there are no registrations, set the result to an empty JSON array
+                    result = new JsonArray().toString();
+                }
             }
-        }
-            
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-            
-        finally {
+        } finally {
             if (rs != null) { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
             if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
         }
-            
+    
         return result;
     }
     
