@@ -60,8 +60,14 @@ public class RegistrationDAO {
         
         finally {
             
-            if (rs != null) { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
+            if (rs != null) { 
+                try { rs.close(); } 
+                catch (Exception e) { 
+                    e.printStackTrace(); } }
+            if (ps != null) { 
+                try { ps.close(); } 
+                catch (Exception e) { 
+                    e.printStackTrace(); } }
             
         }
         
@@ -98,7 +104,10 @@ public class RegistrationDAO {
         
         finally {
 
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
+            if (ps != null) { 
+                try { ps.close(); } 
+                catch (Exception e) { 
+                    e.printStackTrace(); } }
             
         }
         
@@ -135,7 +144,10 @@ public class RegistrationDAO {
         
         finally {
 
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
+            if (ps != null) { 
+                try { ps.close(); } 
+                catch (Exception e) { 
+                    e.printStackTrace(); } }
             
         }
         
@@ -184,8 +196,15 @@ public class RegistrationDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null) { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
+            if (rs != null) { 
+                try { rs.close(); } 
+                catch (Exception e) { 
+                    e.printStackTrace(); } 
+                            }
+            if (ps != null) { 
+                try { ps.close(); } 
+                catch (Exception e) { 
+                    e.printStackTrace(); } }
         }
     
         return result;
